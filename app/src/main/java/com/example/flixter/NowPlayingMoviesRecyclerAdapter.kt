@@ -42,7 +42,7 @@ class NowPlayingMoviesRecyclerAdapter(
 
         holder.mItem = movie
         Glide.with(holder.mView)
-            .load("https://image.tmdb.org/t/p/w500/" + movie.posterPath)
+            .load("https://image.tmdb.org/t/p/w342/" + movie.posterPath)
             .centerInside()
             .into(holder.mMoviePoster)
         holder.mMovieTitle.text = movie.title
