@@ -16,7 +16,8 @@ class NowPlayingMovie(
     val movieId: Int,
     val title: String,
     val overview: String,
-    val posterPath: String
+    val posterPath: String,
+    val backdropPath: String
 ) {
     companion object {
         fun fromJsonArray(movieJsonArray: JSONArray): List<NowPlayingMovie> {
@@ -29,6 +30,7 @@ class NowPlayingMovie(
                         movieJson.getString("title"),
                         movieJson.getString("overview"),
                         movieJson.getString("poster_path"),
+                        movieJson.getString("backdrop_path")
                     )
                 )
             }

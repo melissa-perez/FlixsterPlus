@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.flixter.R.id
+import android.content.res.Configuration
 
 class NowPlayingMoviesRecyclerAdapter(
     private val movies: List<NowPlayingMovie>,
@@ -28,7 +29,16 @@ class NowPlayingMoviesRecyclerAdapter(
         val mMoviePoster: ImageView = mView.findViewById<View>(id.movie_image) as ImageView
         val mMovieTitle: TextView = mView.findViewById<View>(id.movie_title) as TextView
         val mMovieOverview: TextView = mView.findViewById<View>(id.movie_overview) as TextView
-
+            val resources = context.resources
+            var image = ""
+            val orientation = resources.configuration.orientation
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                image = movie.posterImageUrl
+            } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                image = movie.backdropImageUrl
+            }
+            Glide.with(context).load(image).into(ivPoster)
+        }
         override fun toString(): String {
             return mMovieTitle.toString() + " '" + mMovieOverview.text + "'"
         }
