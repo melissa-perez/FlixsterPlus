@@ -41,10 +41,10 @@ class NowPlayingMoviesRecyclerAdapter(
         val movie = movies[position]
 
         holder.mItem = movie
-            /*Glide.with(holder.mView)
-            .load("https://image.tmdb.org/t/p/w500/" + movie.posterImageUrl)
+        Glide.with(holder.mView)
+            .load("https://image.tmdb.org/t/p/w500/" + movie.posterPath)
             .centerInside()
-            .into(holder.mMoviePoster)*/
+            .into(holder.mMoviePoster)
         holder.mMovieTitle.text = movie.title
         holder.mMovieOverview.text = movie.overview
 

@@ -9,14 +9,13 @@ import android.widget.Toast
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.RequestParams
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import okhttp3.Headers
-import org.json.JSONObject
+import org.json.JSONArray
 
 private const val API_KEY = "5502e1574702c422bf438431d56a2184"
 
@@ -40,7 +39,7 @@ class NowPlayingMoviesFragment : Fragment(), OnListFragmentInteractionListener {
         val progressBar = view.findViewById<View>(R.id.progress) as ContentLoadingProgressBar
         val recyclerView = view.findViewById<View>(R.id.list) as RecyclerView
         val context = view.context
-        recyclerView.layoutManager = GridLayoutManager(context, 2)
+        recyclerView.layoutManager = LinearLayoutManager(context)
         updateAdapter(progressBar, recyclerView)
         return view
     }
@@ -57,10 +56,10 @@ class NowPlayingMoviesFragment : Fragment(), OnListFragmentInteractionListener {
         val params = RequestParams()
         // Using the client, perform the HTTP request
         params["language"] = "en-US"
-        params["page"] = "1"
-        params["api-key"] = API_KEY
+        params["region"] = "US"
+        params["api_key"] = API_KEY
 
-        client["https://api.themoviedb.org/3/movie/now_playing", params, object :
+        client["https://api.themoviedb.org/3/movie/now_playing?", params, object :
             JsonHttpResponseHandler() {
             override fun onFailure(
                 statusCode: Int,
@@ -82,21 +81,17 @@ class NowPlayingMoviesFragment : Fragment(), OnListFragmentInteractionListener {
             override fun onSuccess(statusCode: Int, headers: Headers?, json: JSON?) {
                 // The wait for a response is over
                 progressBar.hide()
-
-                val resultsJSON: JSONObject = json?.jsonObject?.get("results") as JSONObject
-                val movies: String = resultsJSON.get("movies").toString()
-
-                // type used to covert to
-                val arrayMovieType = object : TypeToken<List<NowPlayingMovie>>() {}.type
-
-                val gson = Gson()
-                val models: List<NowPlayingMovie> = gson.fromJson(movies, arrayMovieType)
-
-                recyclerView.adapter =
-                    NowPlayingMoviesRecyclerAdapter(models, this@NowPlayingMoviesFragment)
-
                 // Look for this in Logcat:
                 Log.d("NowPlayingMoviesFragment", "response successful")
+
+                val movieJsonArray: JSONArray? = json?.jsonObject?.getJSONArray("results")
+                Log.v("NowPlayingMoviesFragment", movieJsonArray.toString())
+
+                val movies: MutableList<NowPlayingMovie> = mutableListOf()
+                movieJsonArray?.let { NowPlayingMovie.fromJsonArray(it) }?.let { movies.addAll(it) }
+
+                recyclerView.adapter =
+                    NowPlayingMoviesRecyclerAdapter(movies, this@NowPlayingMoviesFragment)
             }
         }]
     }
