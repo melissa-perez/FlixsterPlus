@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView.OnScrollListener
 import android.widget.Toast
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.Fragment
@@ -16,9 +17,13 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import okhttp3.Headers
 import org.json.JSONArray
 
-private const val API_KEY = "5502e1574702c422bf438431d56a2184"
 
 class NowPlayingMoviesFragment : Fragment(), OnListFragmentInteractionListener {
+    private lateinit var progressBar: ContentLoadingProgressBar
+    private lateinit var recyclerView : RecyclerView
+    private val apiKey = "5502e1574702c422bf438431d56a2184"
+    private var movies: MutableList<NowPlayingMovie> = mutableListOf()
+    private var page = 1
 
     /*
     * What happens when a particular movie is clicked.
@@ -35,14 +40,35 @@ class NowPlayingMoviesFragment : Fragment(), OnListFragmentInteractionListener {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_now_playing_movies_list, container, false)
-        val progressBar = view.findViewById<View>(R.id.progress) as ContentLoadingProgressBar
-        val recyclerView = view.findViewById<View>(R.id.list) as RecyclerView
+        progressBar = view.findViewById<View>(R.id.progress) as ContentLoadingProgressBar
+        recyclerView = view.findViewById<View>(R.id.list) as RecyclerView
         val context = view.context
         recyclerView.layoutManager = LinearLayoutManager(context)
+        Log.d("NowPlayingMoviesFragment", "Called updateAdapter ")
+
         updateAdapter(progressBar, recyclerView)
+
         return view
     }
 
+
+    /*override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+         class MyScrollListener(function: () -> Unit) :
+            RecyclerView.OnScrollListener() { // abstract methods implemenations
+        }
+
+        super.onViewCreated(view, savedInstanceState)
+        Log.d("NowPlayingMoviesFragment", "Called updateAdapter in Onviewcreated")
+
+        recyclerView.addOnScrollListener( MyScrollListener {
+
+            Log.d("NowPlayingMoviesFragment", "Called updateAdapter in Onviewcreated")
+            updateAdapter(progressBar, recyclerView)
+        })
+
+
+    }*/
     /*
      * Updates the RecyclerView adapter with new data.  This is where the
      * networking magic happens!
@@ -56,7 +82,8 @@ class NowPlayingMoviesFragment : Fragment(), OnListFragmentInteractionListener {
         // Using the client, perform the HTTP request
         params["language"] = "en-US"
         params["region"] = "US"
-        params["api_key"] = API_KEY
+        params["api_key"] = apiKey
+        params["page"] = page.toString()
 
         client["https://api.themoviedb.org/3/movie/now_playing?", params, object :
             JsonHttpResponseHandler() {
@@ -84,14 +111,16 @@ class NowPlayingMoviesFragment : Fragment(), OnListFragmentInteractionListener {
                 Log.d("NowPlayingMoviesFragment", "response successful")
 
                 val movieJsonArray: JSONArray? = json?.jsonObject?.getJSONArray("results")
-                Log.v("NowPlayingMoviesFragment", movieJsonArray.toString())
+                //Log.v("NowPlayingMoviesFragment", movieJsonArray.toString())
 
-                val movies: MutableList<NowPlayingMovie> = mutableListOf()
                 movieJsonArray?.let { NowPlayingMovie.fromJsonArray(it) }?.let { movies.addAll(it) }
+                recyclerView.adapter?.notifyItemInserted(movies.size - 1)
 
                 recyclerView.adapter =
                     NowPlayingMoviesRecyclerAdapter(movies, this@NowPlayingMoviesFragment)
             }
         }]
+
+        page++
     }
 }
