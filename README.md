@@ -1,4 +1,4 @@
-# Android Project 3 - Flixter+
+# Android Project 3 - Flixster+
 
 Submitted by: **Melissa Perez**
 
