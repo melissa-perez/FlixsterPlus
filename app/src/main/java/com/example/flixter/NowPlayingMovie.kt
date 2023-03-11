@@ -1,9 +1,5 @@
 package com.example.flixter
 
-import android.annotation.SuppressLint
-import android.os.Parcel
-import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
 import org.json.JSONArray
 
 /**

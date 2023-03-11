@@ -1,5 +1,6 @@
 package com.example.flixter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,19 +27,11 @@ class NowPlayingMoviesRecyclerAdapter(
      */
     inner class MovieViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         var mItem: NowPlayingMovie? = null
+        var mId: Int? = null
         val mMoviePoster: ImageView = mView.findViewById<View>(id.movie_image) as ImageView
         val mMovieTitle: TextView = mView.findViewById<View>(id.movie_title) as TextView
         val mMovieOverview: TextView = mView.findViewById<View>(id.movie_overview) as TextView
-            val resources = context.resources
-            var image = ""
-            val orientation = resources.configuration.orientation
-            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                image = movie.posterImageUrl
-            } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                image = movie.backdropImageUrl
-            }
-            Glide.with(context).load(image).into(ivPoster)
-        }
+
         override fun toString(): String {
             return mMovieTitle.toString() + " '" + mMovieOverview.text + "'"
         }
@@ -48,16 +41,25 @@ class NowPlayingMoviesRecyclerAdapter(
      * This lets us "bind" each Views in the ViewHolder to its' actual data!
      */
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+        val context: Context = holder.itemView.context
         val movie = movies[position]
+        val orientation = context.resources.configuration.orientation
 
         holder.mItem = movie
-        Glide.with(holder.mView)
-            .load("https://image.tmdb.org/t/p/w342/" + movie.posterPath)
-            .centerInside()
-            .into(holder.mMoviePoster)
+        holder.mId = movie.movieId
         holder.mMovieTitle.text = movie.title
         holder.mMovieOverview.text = movie.overview
 
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Glide.with(holder.mView)
+                .load("https://image.tmdb.org/t/p/w342/" + movie.posterPath)
+                .placeholder(R.drawable.movie_broll).into(holder.mMoviePoster)
+        }
+        else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Glide.with(holder.mView)
+                .load("https://image.tmdb.org/t/p/w342/" + movie.backdropPath)
+                .placeholder(R.drawable.movie_broll).into(holder.mMoviePoster)
+        }
 
         holder.mView.setOnClickListener {
             holder.mItem?.let { movie ->

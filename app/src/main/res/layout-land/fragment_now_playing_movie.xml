@@ -7,10 +7,11 @@
 
     <ImageView
         android:id="@+id/movie_image"
-        android:layout_width="120dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="24dp"
+        android:layout_width="300sp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="17dp"
         android:contentDescription="@string/moviePosterText"
+        android:adjustViewBounds="true"
         android:textAppearance="?attr/textAppearanceListItem"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

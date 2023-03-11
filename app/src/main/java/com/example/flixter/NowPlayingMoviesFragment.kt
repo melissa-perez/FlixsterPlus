@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
@@ -25,7 +24,7 @@ class NowPlayingMoviesFragment : Fragment(), OnListFragmentInteractionListener {
     * What happens when a particular movie is clicked.
     */
     override fun onItemClick(item: NowPlayingMovie) {
-        Toast.makeText(context, "test: " + item.title, Toast.LENGTH_LONG).show()
+        Toast.makeText(context, item.movieId.toString() + ": " + item.title, Toast.LENGTH_LONG).show()
     }
 
     /*
