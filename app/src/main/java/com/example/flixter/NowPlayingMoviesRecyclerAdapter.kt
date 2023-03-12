@@ -1,6 +1,7 @@
 package com.example.flixter
 
 import android.content.Context
+import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.flixter.R.id
-import android.content.res.Configuration
 
 class NowPlayingMoviesRecyclerAdapter(
     private val movies: List<NowPlayingMovie>,
@@ -54,8 +54,7 @@ class NowPlayingMoviesRecyclerAdapter(
             Glide.with(holder.mView)
                 .load("https://image.tmdb.org/t/p/w342/" + movie.posterPath)
                 .placeholder(R.drawable.movie_broll).into(holder.mMoviePoster)
-        }
-        else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Glide.with(holder.mView)
                 .load("https://image.tmdb.org/t/p/w342/" + movie.backdropPath)
                 .placeholder(R.drawable.movie_broll).into(holder.mMoviePoster)
@@ -74,4 +73,5 @@ class NowPlayingMoviesRecyclerAdapter(
     override fun getItemCount(): Int {
         return movies.size
     }
+
 }
