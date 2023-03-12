@@ -30,13 +30,24 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+The placeholder Glide code is shown in this gif (AT THE VERY END).
 
-GIF created with LICEcap  
+<img src='flixsterplus.gif' title='Video Walkthrough' width='500' alt='Video Walkthrough' />
+
+I was able to find movies without images where I could actually display the placeholder, although without images there is no further loading.
+<img src='flixsterplus2.gif' title='Video Walkthrough' width='500' alt='Video Walkthrough' />
+
+
+GIFs created with LICEcap  
 
 ## Notes
 
 Describe any challenges encountered while building the app.
+
+- Creating the Fragment flow from scratch was a hurdle, there is a lot of things to set up before you can even run the app
+- Layout issues with constraint layout. I also forgot to change the layout manager from Grid to Linear (OMG)
+- The api_key parameter for the http call was incorrectly mispelled as api-key
+- And last but not least, trying to get more data with further HTTP calls. I had to follow https://github.com/codepath/android_guides/wiki/Endless-Scrolling-with-AdapterViews-and-RecyclerView . Online guides are way more technical and I couldn't keep up. I don't know if its perfectly done, but it does the job
 
 ## License
 
